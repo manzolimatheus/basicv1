@@ -1,4 +1,6 @@
 from math import ceil
+import secrets
+from re import findall
 
 def encode(string):
 
@@ -9,26 +11,38 @@ def encode(string):
     # ou seja, se a posição da letra é 10, será 9
     # Após isso é somado a posição metade da quantidade de caracteres arredondado para cima
     for x in range(len(string)):
-        encrypt_string += string[-x + ceil(len(string)/2)] 
+        if len(string) < 2:
+            print('Insira uma palavra, não uma letra.')
+        else:
+            encrypt_string += string[-x + ceil(len(string)/2)] 
+
+
+    array = []
+    vogais = 'AEIOU'
+
+    for x in range(len(vogais)):
+        array.append(secrets.token_hex(3))
 
     # Aqui estamos substituindo as vogais para outros valores
-    encrypt_string = encrypt_string.replace('A','31x')
-    encrypt_string = encrypt_string.replace('E','05x')
-    encrypt_string = encrypt_string.replace('I','20x')
-    encrypt_string = encrypt_string.replace('O','04x')
-    encrypt_string = encrypt_string.replace('U','06x')
-    encrypt_string = encrypt_string.replace(' ','210x')
 
-    return encrypt_string
+    for x in range(len(vogais)):
+        encrypt_string = encrypt_string.replace(vogais[x],array[x])
 
-def decode(string):
+    hash_code = ''
+
+    for x in range(len(array)):
+        hash_code += array[x]
+
+    return f'Seu código secreto é "{hash_code}", guarde-o para descriptografar. Sua palavra encriptada é "{encrypt_string}" '
+
+def decode(string, hash):
     # Aqui recebemos a string e substituímos os valores modificados para as vogais novamente
-    string = string.replace('31x','A')
-    string = string.replace('05x','E')
-    string = string.replace('20x','I')
-    string = string.replace('04x','O')
-    string = string.replace('06x','U')
-    string = string.replace('210x',' ')
+
+    vogais = 'AEIOU'
+    code = findall('......', hash)
+
+    for x in range(len(vogais)):
+        string = string.replace(code[x], vogais[x])
 
     # Váriavel para estocar a string descriptografada
     final_string =''
@@ -37,23 +51,23 @@ def decode(string):
     for x in range(len(string)):
         final_string += string[-x + ceil(len(string)/2)]
 
-    return final_string
+    return f'A palavra decodificada é "{final_string}"'
 
 # Menu
 
 def menu():
 
     print('''
-    
-     __      ____ 
-     \ \    / /_ |
-      \ \  / / | |
-       \ \/ /  | |
-        \  /   | |
-         \/    |_|
-              
-
-    Olá, esse é o criptografador V1, o que deseja fazer?
+        
+        _               _           __ 
+        | |             (_)         /_ |
+        | |__   __ _ ___ _  _____   _| |
+        | '_ \ / _` / __| |/ __\ \ / / |
+        | |_) | (_| \__ \ | (__ \ V /| |
+        |_.__/ \__,_|___/_|\___| \_/ |_|
+                                 
+                                 
+    Olá, esse é o criptografador Basicv1, o que deseja fazer?
     [1] - 🔒 Criptografar
     [2] - 🔑 Descriptografar
 
@@ -65,8 +79,9 @@ def menu():
         string = input("Digite o texto que deseja criptografar: ")
         print(encode(string.upper()))
     elif option == '2':
-        string = input("Digite o texto que deseja descriptografar: ")
-        print(decode(string))
+        string = input("Digite o texto criptografado que deseja descriptografar: ")
+        code = input("Insira o código secreto: ")
+        print(decode(string, code))
     else:
         print('⚠ OPÇÃO INVÁLIDA!!!')
         menu()
