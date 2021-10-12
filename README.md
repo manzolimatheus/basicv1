@@ -1,5 +1,5 @@
 
-## 🍔 Criptografia Basicv1
+## 🔐 Criptografia Basicv1
 
 <div align="center">
 <img src="https://i.imgur.com/bQfcMNW.png" width="200px">
