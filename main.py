@@ -19,13 +19,10 @@ def encode(string):
 
     array = []
     vogais = 'AEIOU'
-
+    
+    # Aqui estamos substituindo as vogais para outros valores
     for x in range(len(vogais)):
         array.append(secrets.token_hex(3))
-
-    # Aqui estamos substituindo as vogais para outros valores
-
-    for x in range(len(vogais)):
         encrypt_string = encrypt_string.replace(vogais[x],array[x])
 
     hash_code = ''
